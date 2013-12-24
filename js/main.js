@@ -270,5 +270,4 @@ function postCanvasToFacebook(data) {
             }, {scope : "publish_stream"});
         }
     });
-
 };
