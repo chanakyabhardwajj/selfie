@@ -176,7 +176,18 @@ prevbutton.addEventListener('click', function (ev) {
             camanInst[camanEffects[--camanCntr]]();
             camanInst.render(function () {
                 camanBusy = false;
+
+                if(camanCntr==0){
+                    $(prevbutton).css({"color":"rgba(200,200,200,0.5)"});
+                    $(nextbutton).css({"color":"rgba(255,255,255,1)"});
+                }
+                else if(camanCntr>0){
+                    $(prevbutton).css({"color":"rgba(255,255,255,1)"});
+                    $(nextbutton).css({"color":"rgba(255,255,255,1)"});
+                }
             });
+
+
         }
     }
     ev.preventDefault();
@@ -193,7 +204,18 @@ nextbutton.addEventListener('click', function (ev) {
             camanInst[camanEffects[++camanCntr]]();
             camanInst.render(function () {
                 camanBusy = false;
+
+                if(camanCntr==camanEffects.length-1){
+                    $(nextbutton).css({"color":"rgba(200,200,200,0.5)"});
+                    $(prevbutton).css({"color":"rgba(255,255,255,1)"});
+                }
+                else if(camanCntr<camanEffects.length-1){
+                    $(nextbutton).css({"color":"rgba(255,255,255,1)"});
+                    $(prevbutton).css({"color":"rgba(255,255,255,1)"});
+                }
             });
+
+
         }
     }
     ev.preventDefault();
