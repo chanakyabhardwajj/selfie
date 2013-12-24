@@ -143,7 +143,6 @@ function clickSelfie() {
         this[camanEffects[camanCntr]]();
         this.render(function () {
             camanBusy = false;
-            console.log("init   " + camanCntr);
         });
     });
 
@@ -166,7 +165,6 @@ resetbutton.addEventListener('click', function (ev) {
 }, false);
 
 prevbutton.addEventListener('click', function (ev) {
-    console.log("prev start - " + camanCntr)
     restoreShareBtn();
     if (camanInst) {
         var bool = camanCntr > 0 ? true : false;
@@ -177,7 +175,6 @@ prevbutton.addEventListener('click', function (ev) {
             camanInst[camanEffects[--camanCntr]]();
             camanInst.render(function () {
                 camanBusy = false;
-                console.log("prev finish - " + camanCntr)
             });
         }
     }
@@ -185,7 +182,6 @@ prevbutton.addEventListener('click', function (ev) {
 }, false);
 
 nextbutton.addEventListener('click', function (ev) {
-    console.log("next start - " + camanCntr)
     restoreShareBtn();
     if (camanInst) {
         var bool = camanCntr < camanEffects.length - 1 ? true : false;
@@ -196,7 +192,6 @@ nextbutton.addEventListener('click', function (ev) {
             camanInst[camanEffects[++camanCntr]]();
             camanInst.render(function () {
                 camanBusy = false;
-                console.log("next finish - " + camanCntr)
             });
         }
     }
