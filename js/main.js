@@ -66,17 +66,13 @@ var Base64Binary = {
         startbutton = document.querySelector('#startbutton'),
         resetbutton = document.querySelector('#resetbutton'),
         prevbutton = document.querySelector('#prev'),
-        nextbutton = document.querySelector('#next');
+        nextbutton = document.querySelector('#next'),
+        shareBtn = $("#shareOnFB");
 
-    video.addEventListener('play', function (ev) {
-        console.log("play")
-        if (video.videoHeight) {
-            vidH = video.videoHeight;
-        }
-        if (video.videoWidth) {
+    video.addEventListener('playing', function (ev) {
+        if (video.videoHeight && video.videoWidth) {
             vidW = Math.floor(video.videoWidth / (video.videoHeight / vidH));
         }
-
         init();
     }, false);
 
@@ -99,9 +95,6 @@ var Base64Binary = {
     }
 
     function init() {
-        video.setAttribute('width', vidW);
-        video.setAttribute('height', vidH);
-
         $("#videoRequest").fadeOut(200, function () {
             $("#selfieBox").show();
         });
@@ -154,6 +147,12 @@ var Base64Binary = {
         });
     }
 
+    function restoreShareBtn(){
+        $(shareBtn.find(".fa-spinner")[0]).addClass("hidden");
+        $(shareBtn.find(".shareOnFBStatus")[0]).html("");
+        shareBtn.css({"backgroundColor" : "#4c66a4"});
+    }
+
     startbutton.addEventListener('click', function (ev) {
         clickSelfie();
         ev.preventDefault();
@@ -165,6 +164,7 @@ var Base64Binary = {
     }, false);
 
     prevbutton.addEventListener('click', function (ev) {
+        restoreShareBtn();
         if (camanInst) {
             var bool = camanCntr > 0 ? true : false;
             if (bool && !camanBusy) {
@@ -181,6 +181,7 @@ var Base64Binary = {
     }, false);
 
     nextbutton.addEventListener('click', function (ev) {
+        restoreShareBtn();
         if (camanInst) {
             var bool = camanCntr < camanEffects.length - 1 ? true : false;
             if (bool && !camanBusy) {
@@ -196,8 +197,8 @@ var Base64Binary = {
         ev.preventDefault();
     }, false);
 
-    $("body").on("click", ".shareOnFB", function () {
-        postCanvasToFacebook(vidCanvas[0].toDataURL('image/png'), $(this));
+    shareBtn.click(function () {
+        postCanvasToFacebook(vidCanvas[0].toDataURL('image/png'));
     })
 
 })();
@@ -205,9 +206,6 @@ var Base64Binary = {
 $.getScript('//connect.facebook.net/en_UK/all.js', function () {
     FB.init({
         appId : '564603610295965'
-    });
-    FB.getLoginStatus(function () {
-        console.log(arguments)
     });
 });
 
@@ -220,7 +218,7 @@ if (XMLHttpRequest.prototype.sendAsBinary === undefined) {
     };
 }
 
-function postImageToFacebook(authToken, filename, mimeType, imageData, message, elem) {
+function postImageToFacebook(authToken, filename, mimeType, imageData, message) {
     // this is the multipart/form-data boundary we'll use
     var boundary = '----ThisIsTheBoundary1234567890';
     // let's encode our image file, which is contained in the var
@@ -239,37 +237,37 @@ function postImageToFacebook(authToken, filename, mimeType, imageData, message, 
     var xhr = new XMLHttpRequest();
     xhr.open('POST', 'https://graph.facebook.com/me/photos?access_token=' + authToken, true);
     xhr.onload = function () {
-        $($(elem).find(".fa-spinner")[0]).addClass("hidden");
-        $($(elem).find(".fa-facebook")[0]).addClass("hidden");
-        $($(elem).find(".shareOnFBStatus")[0]).html("Shared!");
-        $(elem).css({"backgroundColor" : "#00A300"});
-    }
+        $(shareBtn.find(".fa-spinner")[0]).addClass("hidden");
+        $(shareBtn.find(".fa-facebook")[0]).addClass("hidden");
+        $(shareBtn.find(".shareOnFBStatus")[0]).html("Shared!");
+        shareBtn.css({"backgroundColor" : "#00A300"});
+    };
 
     xhr.onerror = function () {
-        $($(elem).find(".fa-spinner")[0]).addClass("hidden");
-        $($(elem).find(".shareOnFBStatus")[0]).html("Oops! Try again!");
-        $(elem).css({"backgroundColor" : "#E00000"});
+        $(shareBtn.find(".fa-spinner")[0]).addClass("hidden");
+        $(shareBtn.find(".shareOnFBStatus")[0]).html("Oops! Try again!");
+        shareBtn.css({"backgroundColor" : "#E00000"});
     };
     xhr.setRequestHeader("Content-Type", "multipart/form-data; boundary=" + boundary);
     xhr.sendAsBinary(formData);
 };
 
-function postCanvasToFacebook(data, elem) {
-    $($(elem).find(".fa-spinner")[0]).removeClass("hidden");
+function postCanvasToFacebook(data) {
+    $(shareBtn.find(".fa-spinner")[0]).removeClass("hidden");
     var encodedPng = data.substring(data.indexOf(',') + 1, data.length);
     var decodedPng = Base64Binary.decode(encodedPng);
     FB.getLoginStatus(function (response) {
         if (response.status === "connected") {
-            postImageToFacebook(response.authResponse.accessToken, "selfie", "image/png", decodedPng, "selfie", elem);
+            postImageToFacebook(response.authResponse.accessToken, "selfie", "image/png", decodedPng, "selfie");
         }
         else if (response.status === "not_authorized") {
             FB.login(function (response) {
-                postImageToFacebook(response.authResponse.accessToken, "selfie", "image/png", decodedPng, "selfie", elem);
+                postImageToFacebook(response.authResponse.accessToken, "selfie", "image/png", decodedPng, "selfie");
             }, {scope : "publish_stream"});
         }
         else {
             FB.login(function (response) {
-                postImageToFacebook(response.authResponse.accessToken, "selfie", "image/png", decodedPng, "selfie", elem);
+                postImageToFacebook(response.authResponse.accessToken, "selfie", "image/png", decodedPng, "selfie");
             }, {scope : "publish_stream"});
         }
     });

@@ -203,7 +203,7 @@ video{
     display: inline-block;
 }
 
-.shareOnFB{
+#shareOnFB{
     display: inline-block;
     background: #4c66a4;
     padding: 2px;
@@ -212,7 +212,7 @@ video{
     min-width: 25px;
 }
 
-.shareOnFB i, span{
+#shareOnFB i, span{
     margin:0 3px;
 }
 
