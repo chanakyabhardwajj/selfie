@@ -52,162 +52,159 @@ var Base64Binary = {
     }
 };
 
-(function () {
+var video = document.querySelector('#video'),
+    vidCanvas,
+    cnvTitle = $("#cnvTitle"),
+    cnvBox = $("#cnvBox"),
+    cnvFooter = $("#cnvFooter"),
+    controls = document.querySelector('#controls'),
+    vidH = 480, vidW = 640,
+    camanInst = null, camanCntr = 0, camanBusy = false,
+    camanEffects = ["vintage", "lomo", "clarity", "sinCity", "sunrise", "crossProcess", "orangePeel", "love", "grungy", "jarques", "pinhole", "oldBoot", "glowingSun", "hazyDays", "herMajesty", "nostalgia", "hemingway", "concentrate"],
+    startbutton = document.querySelector('#startbutton'),
+    resetbutton = document.querySelector('#resetbutton'),
+    prevbutton = document.querySelector('#prev'),
+    nextbutton = document.querySelector('#next'),
+    shareBtn = $("#shareOnFB");
 
-    var video = document.querySelector('#video'),
-        vidCanvas,
-        cnvTitle = $("#cnvTitle"),
-        cnvBox = $("#cnvBox"),
-        cnvFooter = $("#cnvFooter"),
-        controls = document.querySelector('#controls'),
-        vidH = 480, vidW = 640,
-        camanInst = null, camanCntr = 0, camanBusy = false,
-        camanEffects = ["vintage", "lomo", "clarity", "sinCity", "sunrise", "crossProcess", "orangePeel", "love", "grungy", "jarques", "pinhole", "oldBoot", "glowingSun", "hazyDays", "herMajesty", "nostalgia", "hemingway", "concentrate"],
-        startbutton = document.querySelector('#startbutton'),
-        resetbutton = document.querySelector('#resetbutton'),
-        prevbutton = document.querySelector('#prev'),
-        nextbutton = document.querySelector('#next');
-
-    video.addEventListener('play', function (ev) {
-        console.log("play")
-        if (video.videoHeight) {
-            vidH = video.videoHeight;
-        }
-        if (video.videoWidth) {
-            vidW = Math.floor(video.videoWidth / (video.videoHeight / vidH));
-        }
-
-        init();
-    }, false);
-
-    navigator.getUserMedia = navigator.getUserMedia ||
-        navigator.webkitGetUserMedia ||
-        navigator.mozGetUserMedia ||
-        navigator.msGetUserMedia;
-
-    if (navigator.getUserMedia) {
-        navigator.getUserMedia({audio : false, video : true}, function (stream) {
-            video.src = window.URL.createObjectURL(stream);
-            video.play();
-
-        }, function (err) {
-            $("#videoRequestMsg").html("Oops! We could not get access to your webcam. Please reload to try again!")
-        });
+video.addEventListener('playing', function (ev) {
+    if (video.videoHeight && video.videoWidth) {
+        vidW = Math.floor(video.videoWidth / (video.videoHeight / vidH));
     }
-    else {
-        $("#videoRequestMsg").html("Seems like you forgot to update your browser. </br> C'mon! Do it! </br>Do it <Strong><a href='http://browsehappy.com/'>here</a></Strong> right now!!");
-    }
+    init();
+}, false);
 
-    function init() {
-        video.setAttribute('width', vidW);
-        video.setAttribute('height', vidH);
+navigator.getUserMedia = navigator.getUserMedia ||
+    navigator.webkitGetUserMedia ||
+    navigator.mozGetUserMedia ||
+    navigator.msGetUserMedia;
 
-        $("#videoRequest").fadeOut(200, function () {
-            $("#selfieBox").show();
-        });
-    }
-
-    function resizeStuff() {
-        //do video canvas resizing
-        //do sly resizing
-        //do avgrund resizing
-    }
-
-    function cleanUpSelfies() {
-        camanCntr = 0;
-
-        $(resetbutton).hide();
-        $(cnvFooter).hide();
-        $(controls).hide();
-
-        $(vidCanvas).hide();
-        $(vidCanvas).remove();
-        vidCanvas = null;
-
+if (navigator.getUserMedia) {
+    navigator.getUserMedia({audio : false, video : true}, function (stream) {
+        video.src = window.URL.createObjectURL(stream);
         video.play();
-        $(video).show();
-        $(startbutton).show();
-    }
 
-    function clickSelfie() {
-        var id = Math.random().toString(36).replace(/[^a-z]+/g, '');
-        vidCanvas = $("<canvas></canvas>").attr({"id" : id, "width" : vidW, "height" : vidH}).addClass("vidCanvas");
-        cnvBox.prepend(vidCanvas);
+    }, function (err) {
+        $("#videoRequestMsg").html("Oops! We could not get access to your webcam. Please reload to try again!")
+    });
+}
+else {
+    $("#videoRequestMsg").html("Seems like you forgot to update your browser. </br> C'mon! Do it! </br>Do it <Strong><a href='http://browsehappy.com/'>here</a></Strong> right now!!");
+}
 
-        video.pause();
-        $(video).hide();
-        $(startbutton).hide();
-        $(resetbutton).show();
-        $(vidCanvas).css({"width" : vidW, "height" : vidH});
-        $(vidCanvas).show();
-        $(controls).show();
-        $(cnvFooter).show();
+function init() {
+    $("#videoRequest").fadeOut(200, function () {
+        $("#selfieBox").show();
+    });
+}
 
+function resizeStuff() {
+    //do video canvas resizing
+    //do sly resizing
+    //do avgrund resizing
+}
 
-        var cntxt = vidCanvas[0].getContext("2d");
-        cntxt.drawImage(video, 0, 0, vidW, vidH);
+function cleanUpSelfies() {
+    camanCntr = 0;
 
-        cnvTitle.html(camanEffects[camanCntr]);
-        camanInst = Caman("#" + id, function () {
-            this[camanEffects[camanCntr++]]();
-            this.render();
+    $(resetbutton).hide();
+    $(cnvFooter).hide();
+    $(controls).hide();
+
+    $(vidCanvas).hide();
+    $(vidCanvas).remove();
+    vidCanvas = null;
+
+    video.play();
+    $(video).show();
+    $(startbutton).show();
+}
+
+function clickSelfie() {
+    var id = Math.random().toString(36).replace(/[^a-z]+/g, '');
+    vidCanvas = $("<canvas></canvas>").attr({"id" : id, "width" : vidW, "height" : vidH}).addClass("vidCanvas");
+    cnvBox.prepend(vidCanvas);
+
+    video.pause();
+    $(video).hide();
+    $(startbutton).hide();
+    $(resetbutton).show();
+    $(vidCanvas).css({"width" : vidW, "height" : vidH});
+    $(vidCanvas).show();
+    $(controls).show();
+    $(cnvFooter).show();
+
+    var cntxt = vidCanvas[0].getContext("2d");
+    cntxt.drawImage(video, 0, 0, vidW, vidH);
+
+    cnvTitle.html(camanEffects[camanCntr]);
+    camanInst = Caman("#" + id, function () {
+        camanBusy = true;
+        this[camanEffects[camanCntr]]();
+        this.render(function () {
+            camanBusy = false;
         });
+    });
+
+}
+
+function restoreShareBtn() {
+    $(shareBtn.find(".fa-spinner")[0]).addClass("hidden");
+    $(shareBtn.find(".shareOnFBStatus")[0]).html("");
+    shareBtn.css({"backgroundColor" : "#4c66a4"});
+}
+
+startbutton.addEventListener('click', function (ev) {
+    clickSelfie();
+    ev.preventDefault();
+}, false);
+
+resetbutton.addEventListener('click', function (ev) {
+    cleanUpSelfies();
+    ev.preventDefault();
+}, false);
+
+prevbutton.addEventListener('click', function (ev) {
+    restoreShareBtn();
+    if (camanInst) {
+        var bool = camanCntr > 0 ? true : false;
+        if (bool && !camanBusy) {
+            camanBusy = true;
+            cnvTitle.html(camanEffects[camanCntr - 1]);
+            camanInst.revert();
+            camanInst[camanEffects[--camanCntr]]();
+            camanInst.render(function () {
+                camanBusy = false;
+            });
+        }
     }
+    ev.preventDefault();
+}, false);
 
-    startbutton.addEventListener('click', function (ev) {
-        clickSelfie();
-        ev.preventDefault();
-    }, false);
-
-    resetbutton.addEventListener('click', function (ev) {
-        cleanUpSelfies();
-        ev.preventDefault();
-    }, false);
-
-    prevbutton.addEventListener('click', function (ev) {
-        if (camanInst) {
-            var bool = camanCntr > 0 ? true : false;
-            if (bool && !camanBusy) {
-                camanBusy=true;
-                cnvTitle.html(camanEffects[camanCntr]);
-                camanInst.revert();
-                camanInst[camanEffects[--camanCntr]]();
-                camanInst.render(function(){
-                    camanBusy=false;
-                });
-            }
+nextbutton.addEventListener('click', function (ev) {
+    restoreShareBtn();
+    if (camanInst) {
+        var bool = camanCntr < camanEffects.length - 1 ? true : false;
+        if (bool && !camanBusy) {
+            camanBusy = true;
+            cnvTitle.html(camanEffects[camanCntr + 1]);
+            camanInst.revert();
+            camanInst[camanEffects[++camanCntr]]();
+            camanInst.render(function () {
+                camanBusy = false;
+            });
         }
-        ev.preventDefault();
-    }, false);
+    }
+    ev.preventDefault();
+}, false);
 
-    nextbutton.addEventListener('click', function (ev) {
-        if (camanInst) {
-            var bool = camanCntr < camanEffects.length - 1 ? true : false;
-            if (bool && !camanBusy) {
-                camanBusy=true;
-                cnvTitle.html(camanEffects[camanCntr]);
-                camanInst.revert();
-                camanInst[camanEffects[++camanCntr]]();
-                camanInst.render(function(){
-                    camanBusy=false;
-                });
-            }
-        }
-        ev.preventDefault();
-    }, false);
-
-    $("body").on("click", ".shareOnFB", function () {
-        postCanvasToFacebook(vidCanvas[0].toDataURL('image/png'), $(this));
-    })
-
-})();
+shareBtn.click(function () {
+    postCanvasToFacebook(vidCanvas[0].toDataURL('image/png'));
+});
 
 $.getScript('//connect.facebook.net/en_UK/all.js', function () {
     FB.init({
         appId : '564603610295965'
-    });
-    FB.getLoginStatus(function () {
-        console.log(arguments)
     });
 });
 
@@ -220,7 +217,7 @@ if (XMLHttpRequest.prototype.sendAsBinary === undefined) {
     };
 }
 
-function postImageToFacebook(authToken, filename, mimeType, imageData, message, elem) {
+function postImageToFacebook(authToken, filename, mimeType, imageData, message) {
     // this is the multipart/form-data boundary we'll use
     var boundary = '----ThisIsTheBoundary1234567890';
     // let's encode our image file, which is contained in the var
@@ -239,39 +236,38 @@ function postImageToFacebook(authToken, filename, mimeType, imageData, message, 
     var xhr = new XMLHttpRequest();
     xhr.open('POST', 'https://graph.facebook.com/me/photos?access_token=' + authToken, true);
     xhr.onload = function () {
-        $($(elem).find(".fa-spinner")[0]).addClass("hidden");
-        $($(elem).find(".fa-facebook")[0]).addClass("hidden");
-        $($(elem).find(".shareOnFBStatus")[0]).html("Shared!");
-        $(elem).css({"backgroundColor" : "#00A300"});
-    }
+        $(shareBtn.find(".fa-spinner")[0]).addClass("hidden");
+        $(shareBtn.find(".fa-facebook")[0]).addClass("hidden");
+        $(shareBtn.find(".shareOnFBStatus")[0]).html("Shared!");
+        shareBtn.css({"backgroundColor" : "#00A300"});
+    };
 
     xhr.onerror = function () {
-        $($(elem).find(".fa-spinner")[0]).addClass("hidden");
-        $($(elem).find(".shareOnFBStatus")[0]).html("Oops! Try again!");
-        $(elem).css({"backgroundColor" : "#E00000"});
+        $(shareBtn.find(".fa-spinner")[0]).addClass("hidden");
+        $(shareBtn.find(".shareOnFBStatus")[0]).html("Oops! Try again!");
+        shareBtn.css({"backgroundColor" : "#E00000"});
     };
     xhr.setRequestHeader("Content-Type", "multipart/form-data; boundary=" + boundary);
     xhr.sendAsBinary(formData);
 };
 
-function postCanvasToFacebook(data, elem) {
-    $($(elem).find(".fa-spinner")[0]).removeClass("hidden");
+function postCanvasToFacebook(data) {
+    $(shareBtn.find(".fa-spinner")[0]).removeClass("hidden");
     var encodedPng = data.substring(data.indexOf(',') + 1, data.length);
     var decodedPng = Base64Binary.decode(encodedPng);
     FB.getLoginStatus(function (response) {
         if (response.status === "connected") {
-            postImageToFacebook(response.authResponse.accessToken, "selfie", "image/png", decodedPng, "selfie", elem);
+            postImageToFacebook(response.authResponse.accessToken, "selfie", "image/png", decodedPng, "");
         }
         else if (response.status === "not_authorized") {
             FB.login(function (response) {
-                postImageToFacebook(response.authResponse.accessToken, "selfie", "image/png", decodedPng, "selfie", elem);
+                postImageToFacebook(response.authResponse.accessToken, "selfie", "image/png", decodedPng, "");
             }, {scope : "publish_stream"});
         }
         else {
             FB.login(function (response) {
-                postImageToFacebook(response.authResponse.accessToken, "selfie", "image/png", decodedPng, "selfie", elem);
+                postImageToFacebook(response.authResponse.accessToken, "selfie", "image/png", decodedPng, "");
             }, {scope : "publish_stream"});
         }
     });
-
 };
