@@ -149,6 +149,7 @@ function clickSelfie() {
 }
 
 function restoreShareBtn() {
+    $(shareBtn.find(".fa-facebook")[0]).removeClass("hidden");
     $(shareBtn.find(".fa-spinner")[0]).addClass("hidden");
     $(shareBtn.find(".shareOnFBStatus")[0]).html("");
     shareBtn.css({"backgroundColor" : "#4c66a4"});
