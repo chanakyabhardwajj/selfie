@@ -252,6 +252,18 @@ video{
     cursor:pointer;
 }
 
+#githubIcon{
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+#footer{
+    background-color: rgba(150,150,150,0.7);
+    color:#ccc;
+    font-size: 13px;
+}
+
 
 /*
  * Spinkit Spinner Styles
