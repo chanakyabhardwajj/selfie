@@ -144,6 +144,8 @@ section{
 
 #selfieBox{
     display: none;
+    width: 800px;
+    margin: auto;
 }
 
 video{
@@ -194,18 +196,27 @@ video{
     cursor: pointer;
 }
 #cnvFooter{
-    position: relative;
-    top:-50px;
     display: none;
+    text-align: right;
+    padding-right: 72px;
 }
 
 #cnvTitle{
     display: inline-block;
 }
 
+#downloadImg{
+    display: inline-block;
+    background: #A34100;
+    color:white;
+    padding: 2px;
+    margin:2px;
+    cursor: pointer;
+    min-width: 25px;
+}
+
 #shareOnFB{
     display: inline-block;
-    background: #4c66a4;
     padding: 2px;
     margin:2px;
     cursor: pointer;
@@ -222,7 +233,7 @@ video{
     background: transparent;
     color: #eee;
     position: relative;
-    top:-200px;
+    top:-320px;
     z-index:99999;
     display: none;
 }

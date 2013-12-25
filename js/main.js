@@ -65,7 +65,8 @@ var video = document.querySelector('#video'),
     resetbutton = document.querySelector('#resetbutton'),
     prevbutton = document.querySelector('#prev'),
     nextbutton = document.querySelector('#next'),
-    shareBtn = $("#shareOnFB");
+    shareBtn = $("#shareOnFB"),
+    dldBtn = $("#downloadImg");
 
 video.addEventListener('playing', function (ev) {
     if (video.videoHeight && video.videoWidth) {
@@ -221,8 +222,18 @@ nextbutton.addEventListener('click', function (ev) {
     ev.preventDefault();
 }, false);
 
+function downloadImg(){
+    if(camanInst){
+        camanInst.save("png");
+    }
+}
+
 shareBtn.click(function () {
     postCanvasToFacebook(vidCanvas[0].toDataURL('image/png'));
+});
+
+dldBtn.click(function () {
+    downloadImg();
 });
 
 $.getScript('//connect.facebook.net/en_UK/all.js', function () {
