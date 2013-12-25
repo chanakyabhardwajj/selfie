@@ -221,6 +221,7 @@ video{
     margin:2px;
     cursor: pointer;
     min-width: 25px;
+    font-size: 14px;
 }
 
 #shareOnFB i, span{

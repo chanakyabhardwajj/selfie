@@ -153,7 +153,6 @@ function restoreShareBtn() {
     $(shareBtn.find(".fa-facebook")[0]).removeClass("hidden");
     $(shareBtn.find(".fa-spinner")[0]).addClass("hidden");
     $(shareBtn.find(".shareOnFBStatus")[0]).html("");
-    shareBtn.css({"backgroundColor" : "#4c66a4"});
 }
 
 startbutton.addEventListener('click', function (ev) {
@@ -273,13 +272,11 @@ function postImageToFacebook(authToken, filename, mimeType, imageData, message) 
         $(shareBtn.find(".fa-spinner")[0]).addClass("hidden");
         $(shareBtn.find(".fa-facebook")[0]).addClass("hidden");
         $(shareBtn.find(".shareOnFBStatus")[0]).html("Shared!");
-        shareBtn.css({"backgroundColor" : "#00A300"});
     };
 
     xhr.onerror = function () {
         $(shareBtn.find(".fa-spinner")[0]).addClass("hidden");
-        $(shareBtn.find(".shareOnFBStatus")[0]).html("Oops! Try again!");
-        shareBtn.css({"backgroundColor" : "#E00000"});
+        $(shareBtn.find(".shareOnFBStatus")[0]).html("Oops!");
     };
     xhr.setRequestHeader("Content-Type", "multipart/form-data; boundary=" + boundary);
     xhr.sendAsBinary(formData);
